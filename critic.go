@@ -56,9 +56,9 @@ func process_message(text string) {
 }
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
-
 	kingpin.Parse()
+	
+	reader := bufio.NewReader(os.Stdin)
 
 	var sep byte
 	sep = (*message_sep)[0]
@@ -71,7 +71,4 @@ func main() {
 		check(err)
 		go process_message(line)
 	}
-
-	//process_message("Hello")
-	//process_message("Hello my Dear!")
 }
