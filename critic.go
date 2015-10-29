@@ -15,6 +15,7 @@ var (
 	suffix        = kingpin.Flag("suffix", "The suffix to be used when writing the files.").Default("json").Short('f').String()
 	critical_size = kingpin.Flag("size", "If the message received is bigger then <size> bytes write the message.").Default("900").Short('s').Int()
 	out_dir       = kingpin.Flag("output-dir", "Messages are written into this directory.").Default("/tmp").Short('o').String()
+	message_sep   = kingpin.Flag("message-separator", "A character that is the separator between messages.").Default("\n").String()
 )
 
 func check(e error) {
@@ -59,8 +60,11 @@ func main() {
 
 	kingpin.Parse()
 
+	var sep byte
+	sep = (*message_sep)[0]
+
 	for {
-		line, err := reader.ReadString('\n')
+		line, err := reader.ReadString(sep)
 		if err == io.EOF {
 			os.Exit(0)
 		}
