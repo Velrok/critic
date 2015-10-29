@@ -3,11 +3,18 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"gopkg.in/alecthomas/kingpin.v2"
 	"io"
 	"math"
 	"os"
 	"strings"
 	"time"
+)
+
+var (
+	suffix        = kingpin.Flag("suffix", "The suffix to be used when writing the files.").Default("json").Short('f').String()
+	critical_size = kingpin.Flag("size", "If the message received is bigger then <size> bytes write the message.").Default("900").Short('s').Int()
+	out_dir       = kingpin.Flag("output-dir", "Messages are written into this directory.").Default("/tmp").Short('o').String()
 )
 
 func check(e error) {
@@ -20,7 +27,7 @@ func persist_message(text string) {
 	text_lenth := len(text)
 	max_length := int(math.Min(80.0, float64(text_lenth)))
 
-	filename := fmt.Sprintf("/tmp/critic_%v.edn", time.Now().Unix())
+	filename := fmt.Sprintf("%v/critic_%v.%v", *out_dir, time.Now().Unix(), *suffix)
 
 	preview := text[0:max_length]
 	dots := ""
@@ -39,16 +46,18 @@ func persist_message(text string) {
 }
 
 func process_message(text string) {
-	text_size := float64(strings.NewReader(text).Len()) / 1000
+	text_size := strings.NewReader(text).Len()
 
 	fmt.Printf("message size: %15.0f kb\n", text_size)
-	if text_size > 900 {
+	if text_size > *critical_size {
 		persist_message(text)
 	}
 }
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
+
+	kingpin.Parse()
 
 	for {
 		line, err := reader.ReadString('\n')
