@@ -13,7 +13,7 @@ I needed a cli programm which consumed messages off our kafka topic and writes t
 
 ## Usage
 
-```bash
+```
 usage: critic [<flags>]
 
 Flags:
