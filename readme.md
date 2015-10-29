@@ -13,7 +13,18 @@ I needed a cli programm which consumed messages off our kafka topic and writes t
 
 ## Usage
 
-`critic --help`
+```bash
+usage: critic [<flags>]
+
+Flags:
+  --help               Show help (also see --help-long and --help-man).
+  -f, --suffix="json"  The suffix to be used when writing the files.
+  -s, --size=900       If the message received is bigger then <size> bytes write the message.
+  -o, --output-dir="/tmp"
+                       Messages are written into this directory.
+  --message-separator="\n"
+                       A character that is the separator between messages.
+```
 
 ## Why you should not use this
 
